@@ -1,0 +1,76 @@
+{
+  "repo_name": "repo-onboard-ai",
+  "file_count": 13,
+  "languages": [
+    {
+      "name": "Markdown",
+      "files": 5
+    },
+    {
+      "name": "Python",
+      "files": 3
+    }
+  ],
+  "top_level_areas": [
+    {
+      "name": "examples",
+      "files": 3
+    },
+    {
+      "name": "src",
+      "files": 2
+    },
+    {
+      "name": "LICENSE",
+      "files": 1
+    },
+    {
+      "name": "pyproject.toml",
+      "files": 1
+    },
+    {
+      "name": "README.md",
+      "files": 1
+    },
+    {
+      "name": ".gitignore",
+      "files": 1
+    },
+    {
+      "name": "CONTRIBUTING.md",
+      "files": 1
+    },
+    {
+      "name": "README.zh-CN.md",
+      "files": 1
+    },
+    {
+      "name": "tests",
+      "files": 1
+    },
+    {
+      "name": ".github",
+      "files": 1
+    }
+  ],
+  "entry_files": [
+    "pyproject.toml",
+    "README.md"
+  ],
+  "command_hints": [
+    {
+      "kind": "Install",
+      "command": "python3 -m pip install -e ."
+    },
+    {
+      "kind": "Test",
+      "command": "python3 -m unittest discover -s tests"
+    }
+  ],
+  "first_questions": [
+    "What command starts the project locally?",
+    "Which tests should run before opening a PR?",
+    "Which folders are generated or vendor code?",
+    "What coding conventions are expected but not enforced by tooling?"
+  ]
+}

@@ -93,6 +93,30 @@ def command_hints(files):
     return hints
 
 
+def tree_lines(files, max_depth=3, limit=80):
+    output = []
+    seen_dirs = set()
+    count = 0
+    for path in sorted(files):
+        if count >= limit:
+            output.append("...")
+            break
+        parts = path.split(os.sep)
+        capped = parts[:max_depth]
+        for depth, part in enumerate(capped):
+            is_dir = depth < len(parts) - 1
+            key = tuple(capped[:depth + 1])
+            if is_dir and key in seen_dirs:
+                continue
+            if is_dir:
+                seen_dirs.add(key)
+            indent = "  " * depth
+            suffix = "/" if is_dir else ""
+            output.append("%s%s%s" % (indent, part, suffix))
+            count += 1
+    return output
+
+
 def read_short(repo, path):
     full = os.path.join(repo, path)
     try:
@@ -120,7 +144,7 @@ def repo_data(repo, files):
     }
 
 
-def render(repo, files):
+def render(repo, files, include_tree=False):
     data = repo_data(repo, files)
     langs = data["languages"]
     entries = data["entry_files"]
@@ -143,6 +167,13 @@ def render(repo, files):
         output.append("")
         for item in data["command_hints"]:
             output.append("- %s: `%s`" % (item["kind"], item["command"]))
+    if include_tree:
+        output.append("")
+        output.append("## Repository Tree")
+        output.append("")
+        output.append("```text")
+        output.extend(tree_lines(files))
+        output.append("```")
     output.append("")
     output.append("## Suggested Reading Order")
     output.append("")
@@ -205,6 +236,7 @@ def main(argv=None):
     parser.add_argument("--repo", default=".", help="Repository path")
     parser.add_argument("--max-files", type=int, default=800, help="Maximum files to scan")
     parser.add_argument("--format", choices=["markdown", "json"], default="markdown", help="Output format")
+    parser.add_argument("--tree", action="store_true", help="Include a compact repository tree in Markdown output")
     parser.add_argument("--ai", action="store_true", help="Use an OpenAI-compatible model")
     parser.add_argument("--model", help="Override AI_MODEL for --ai")
     parser.add_argument("--base-url", help="Override AI_BASE_URL for --ai")
@@ -215,7 +247,7 @@ def main(argv=None):
     if args.format == "json":
         draft = json.dumps(repo_data(args.repo, files), ensure_ascii=False, indent=2) + "\n"
     else:
-        draft = render(args.repo, files)
+        draft = render(args.repo, files, args.tree)
     summary = "\n".join(files[:300])
     result = call_ai(summary, draft, args.model, args.base_url) if args.ai else draft
     if args.output:

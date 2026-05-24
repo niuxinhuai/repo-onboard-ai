@@ -1,5 +1,9 @@
 # Repo Onboard AI
 
+[![CI](https://github.com/niuxinhuai/repo-onboard-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/niuxinhuai/repo-onboard-ai/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.7%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 [中文文档](README.zh-CN.md)
 
 Scan a repository and generate a practical `ONBOARDING.md` for new contributors.
@@ -12,6 +16,7 @@ Repo Onboard AI detects languages, top-level areas, likely entry points, and com
 - Detects language mix and top-level areas.
 - Suggests reading order and likely entry points.
 - Infers install, run, build, and test commands from common manifests.
+- Can include a compact repository tree with `--tree`.
 - Supports Markdown and JSON output.
 
 ## Install
@@ -24,10 +29,13 @@ python3 -m pip install -e .
 
 ```bash
 repo-onboard-ai --repo .
+repo-onboard-ai --repo . --tree
 repo-onboard-ai --repo . --output ONBOARDING.md
 repo-onboard-ai --repo . --format json
 repo-onboard-ai --repo ../some-project --max-files 1200
 ```
+
+See generated examples in [`examples/output.md`](examples/output.md) and [`examples/output.json`](examples/output.json).
 
 Use AI polishing:
 

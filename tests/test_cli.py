@@ -1,6 +1,6 @@
 import unittest
 
-from repo_onboard_ai.__main__ import command_hints, repo_data
+from repo_onboard_ai.__main__ import command_hints, repo_data, tree_lines
 
 
 class RepoOnboardTest(unittest.TestCase):
@@ -13,6 +13,13 @@ class RepoOnboardTest(unittest.TestCase):
         data = repo_data("/tmp/example", ["pyproject.toml", "src/app.py", "README.md"])
         self.assertEqual(data["repo_name"], "example")
         self.assertTrue(data["command_hints"])
+
+    def test_tree_lines_groups_nested_files(self):
+        lines = tree_lines(["README.md", "src/app.py", "src/lib/core.py"], max_depth=2)
+        rendered = "\n".join(lines)
+        self.assertIn("README.md", rendered)
+        self.assertIn("src/", rendered)
+        self.assertIn("app.py", rendered)
 
 
 if __name__ == "__main__":
