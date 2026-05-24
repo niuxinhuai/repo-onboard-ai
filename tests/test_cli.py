@@ -1,6 +1,9 @@
 import unittest
 
-from repo_onboard_ai.__main__ import command_hints, repo_data, tree_lines
+import os
+import tempfile
+
+from repo_onboard_ai.__main__ import command_hints, repo_data, tree_lines, walk_repo
 
 
 class RepoOnboardTest(unittest.TestCase):
@@ -20,6 +23,16 @@ class RepoOnboardTest(unittest.TestCase):
         self.assertIn("README.md", rendered)
         self.assertIn("src/", rendered)
         self.assertIn("app.py", rendered)
+
+    def test_walk_repo_supports_extra_ignore_dirs(self):
+        with tempfile.TemporaryDirectory() as repo:
+            os.mkdir(os.path.join(repo, "generated"))
+            with open(os.path.join(repo, "generated", "skip.py"), "w", encoding="utf-8") as handle:
+                handle.write("pass")
+            with open(os.path.join(repo, "keep.py"), "w", encoding="utf-8") as handle:
+                handle.write("pass")
+            files = walk_repo(repo, 20, extra_ignore=["generated"])
+        self.assertEqual(files, ["keep.py"])
 
 
 if __name__ == "__main__":

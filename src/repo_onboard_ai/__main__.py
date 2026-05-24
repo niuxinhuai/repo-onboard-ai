@@ -26,10 +26,13 @@ LANG_BY_EXT = {
 ENTRY_NAMES = ["README.md", "package.json", "pyproject.toml", "Cargo.toml", "go.mod", "build.gradle", "oh-package.json5", "pubspec.yaml"]
 
 
-def walk_repo(repo, max_files):
+def walk_repo(repo, max_files, extra_ignore=None):
     records = []
+    ignore_dirs = set(IGNORE_DIRS)
+    if extra_ignore:
+        ignore_dirs.update(extra_ignore)
     for root, dirs, files in os.walk(repo):
-        dirs[:] = [item for item in dirs if item not in IGNORE_DIRS and not item.startswith(".cache")]
+        dirs[:] = [item for item in dirs if item not in ignore_dirs and not item.startswith(".cache")]
         for filename in files:
             path = os.path.join(root, filename)
             rel = os.path.relpath(path, repo)
@@ -237,13 +240,14 @@ def main(argv=None):
     parser.add_argument("--max-files", type=int, default=800, help="Maximum files to scan")
     parser.add_argument("--format", choices=["markdown", "json"], default="markdown", help="Output format")
     parser.add_argument("--tree", action="store_true", help="Include a compact repository tree in Markdown output")
+    parser.add_argument("--ignore", action="append", default=[], help="Additional directory name to ignore; repeatable")
     parser.add_argument("--ai", action="store_true", help="Use an OpenAI-compatible model")
     parser.add_argument("--model", help="Override AI_MODEL for --ai")
     parser.add_argument("--base-url", help="Override AI_BASE_URL for --ai")
     parser.add_argument("--output", help="Write result to a file")
     parser.add_argument("--version", action="version", version="repo-onboard-ai %s" % __version__)
     args = parser.parse_args(argv)
-    files = walk_repo(args.repo, args.max_files)
+    files = walk_repo(args.repo, args.max_files, args.ignore)
     if args.format == "json":
         draft = json.dumps(repo_data(args.repo, files), ensure_ascii=False, indent=2) + "\n"
     else:

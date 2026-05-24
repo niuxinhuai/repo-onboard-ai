@@ -13,6 +13,7 @@ Repo Onboard AI 会检测语言分布、顶层目录、可能入口文件和常�
 ## 功能
 
 - 扫描仓库文件，并忽略常见生成目录和依赖目录
+- 支持重复传入 `--ignore`，忽略项目里的自定义生成目录
 - 检测语言分布和顶层模块
 - 建议阅读顺序和可能入口文件
 - 根据常见 manifest 推断安装、运行、构建、测试命令
@@ -49,7 +50,10 @@ repo-onboard-ai --repo . --tree
 repo-onboard-ai --repo . --output ONBOARDING.md
 repo-onboard-ai --repo . --format json
 repo-onboard-ai --repo ../some-project --max-files 1200
+repo-onboard-ai --repo . --ignore generated --ignore vendor
 ```
+
+项目里有自定义生成目录时，可以重复使用 `--ignore`，避免导览文档被噪音文件干扰。
 
 可以直接查看生成示例：[`examples/output.md`](examples/output.md) 和 [`examples/output.json`](examples/output.json)。
 

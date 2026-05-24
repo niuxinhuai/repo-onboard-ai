@@ -13,6 +13,7 @@ Repo Onboard AI detects languages, top-level areas, likely entry points, and com
 ## Features
 
 - Scans repository files while ignoring common generated and dependency directories.
+- Accepts extra ignore directories with repeatable `--ignore`.
 - Detects language mix and top-level areas.
 - Suggests reading order and likely entry points.
 - Infers install, run, build, and test commands from common manifests.
@@ -49,7 +50,10 @@ repo-onboard-ai --repo . --tree
 repo-onboard-ai --repo . --output ONBOARDING.md
 repo-onboard-ai --repo . --format json
 repo-onboard-ai --repo ../some-project --max-files 1200
+repo-onboard-ai --repo . --ignore generated --ignore vendor
 ```
+
+Use repeatable `--ignore` flags for project-specific generated folders that should not appear in the onboarding guide.
 
 See generated examples in [`examples/output.md`](examples/output.md) and [`examples/output.json`](examples/output.json).
 
