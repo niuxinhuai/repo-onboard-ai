@@ -1,26 +1,46 @@
 # Repo Onboard AI
 
-扫描一个代码仓库，生成给新贡献者看的 `ONBOARDING.md`。
+[中文文档](README.zh-CN.md)
 
-默认使用本地启发式分析目录、语言、入口文件和建议阅读顺序；配置 `AI_API_KEY` 后可以让模型把结果整理成更像人写的项目导览。
+Scan a repository and generate a practical `ONBOARDING.md` for new contributors.
 
-## 快速开始
+Repo Onboard AI detects languages, top-level areas, likely entry points, and command hints. It runs locally by default and can optionally ask an OpenAI-compatible model to improve the guide.
+
+## Features
+
+- Scans repository files while ignoring common generated and dependency directories.
+- Detects language mix and top-level areas.
+- Suggests reading order and likely entry points.
+- Infers install, run, build, and test commands from common manifests.
+- Supports Markdown and JSON output.
+
+## Install
 
 ```bash
-python3 -m repo_onboard_ai --repo . --output ONBOARDING.md
+python3 -m pip install -e .
 ```
 
-只打印到终端：
+## Usage
 
 ```bash
-python3 -m repo_onboard_ai --repo ../some-project
+repo-onboard-ai --repo .
+repo-onboard-ai --repo . --output ONBOARDING.md
+repo-onboard-ai --repo . --format json
+repo-onboard-ai --repo ../some-project --max-files 1200
 ```
 
-启用 AI 增强：
+Use AI polishing:
 
 ```bash
 export AI_API_KEY="your-key"
-python3 -m repo_onboard_ai --repo . --ai --output ONBOARDING.md
+repo-onboard-ai --repo . --ai --output ONBOARDING.md
+```
+
+## Development
+
+```bash
+python3 -m pip install -e .
+python3 -m unittest discover -s tests
 ```
 
 ## License
